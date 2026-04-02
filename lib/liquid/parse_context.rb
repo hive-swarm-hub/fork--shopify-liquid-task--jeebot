@@ -5,9 +5,14 @@ module Liquid
     attr_accessor :locale, :line_number, :trim_whitespace, :depth
     attr_reader :partial, :error_mode, :environment, :expression_cache, :string_scanner, :cursor
 
+    # Returns warnings array. Creates mutable array only when a warning is first added.
     def warnings
-      @warnings = [] if @warnings.frozen?
       @warnings
+    end
+
+    def add_warning(warning)
+      @warnings = [] if @warnings.frozen?
+      @warnings << warning
     end
 
     # Shared frozen template_options for the common case (empty options)
