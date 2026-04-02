@@ -3,7 +3,12 @@
 module Liquid
   class ParseContext
     attr_accessor :locale, :line_number, :trim_whitespace, :depth
-    attr_reader :partial, :warnings, :error_mode, :environment, :expression_cache, :string_scanner, :cursor
+    attr_reader :partial, :error_mode, :environment, :expression_cache, :string_scanner, :cursor
+
+    def warnings
+      @warnings = [] if @warnings.frozen?
+      @warnings
+    end
 
     # Shared frozen template_options for the common case (empty options)
     SHARED_DEFAULT_OPTS = { locale: I18n.default }.freeze
@@ -17,7 +22,7 @@ module Liquid
         @template_options = options.dup
         @locale = @template_options[:locale] ||= I18n.default
       end
-      @warnings = []
+      @warnings = Const::EMPTY_ARRAY
 
       # constructing new StringScanner in Lexer, Tokenizer, etc is expensive
       # This StringScanner will be shared by all of them
