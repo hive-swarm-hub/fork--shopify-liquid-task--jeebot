@@ -199,7 +199,10 @@ module Liquid
       length    = segment.length
 
       loop_vars = Liquid::ForloopDrop.new(@name, length, for_stack[-1])
-      scope = { 'forloop' => loop_vars, @variable_name => nil }
+      # Reuse scope hash to avoid allocation per render
+      scope = @cached_scope ||= {}
+      scope['forloop'] = loop_vars
+      scope[@variable_name] = nil
 
       context.stack(scope) do
         for_stack.push(loop_vars)
