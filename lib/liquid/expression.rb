@@ -57,6 +57,8 @@ module Liquid
 
         # Cache only exists during parsing
         if cache
+          # Freeze before hash key use — avoids Ruby creating frozen copy for the key
+          markup.freeze
           return cache[markup] if cache.key?(markup)
 
           cache[markup] = inner_parse(markup, ss, cache).freeze

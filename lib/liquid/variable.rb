@@ -190,6 +190,7 @@ module Liquid
       elsif Expression::LITERALS.key?(expr_markup)
         Expression::LITERALS[expr_markup]
       elsif cache
+        expr_markup.freeze
         cache[expr_markup] || (cache[expr_markup] = VariableLookup.parse_simple(expr_markup, ss, cache).freeze)
       else
         VariableLookup.parse_simple(expr_markup, ss || StringScanner.new(""), nil).freeze
