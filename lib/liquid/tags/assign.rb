@@ -29,9 +29,15 @@ module Liquid
 
     def initialize(tag_name, markup, parse_context)
       super
-      if markup =~ Syntax
-        @to   = Regexp.last_match(1)
-        @from = Variable.new(Regexp.last_match(2), parse_context)
+      eq_pos = markup.index('=')
+      if eq_pos
+        @to   = markup.byteslice(0, eq_pos).strip
+        from_markup = markup.byteslice(eq_pos + 1, markup.bytesize - eq_pos - 1)
+        if !@to.empty?
+          @from = Variable.new(from_markup, parse_context)
+        else
+          self.class.raise_syntax_error(parse_context)
+        end
       else
         self.class.raise_syntax_error(parse_context)
       end

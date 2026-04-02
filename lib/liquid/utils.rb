@@ -94,10 +94,11 @@ module Liquid
     end
 
     def self.to_liquid_value(obj)
-      # Enable "obj" to represent itself as a primitive value like integer, string, or boolean
+      case obj
+      when String, Integer, Float, NilClass, TrueClass, FalseClass, Array, Hash
+        return obj
+      end
       return obj.to_liquid_value if obj.respond_to?(:to_liquid_value)
-
-      # Otherwise return the object itself
       obj
     end
 
