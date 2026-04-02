@@ -5,11 +5,14 @@ module Liquid
     attr_accessor :locale, :line_number, :trim_whitespace, :depth
     attr_reader :partial, :warnings, :error_mode, :environment, :expression_cache, :string_scanner, :cursor
 
+    # Shared frozen template_options for the common case (empty options)
+    SHARED_DEFAULT_OPTS = { locale: I18n.default }.freeze
+
     def initialize(options = Const::EMPTY_HASH)
       @environment = options.fetch(:environment, Environment.default)
       if options.empty?
-        @template_options = { locale: I18n.default }
-        @locale = @template_options[:locale]
+        @template_options = SHARED_DEFAULT_OPTS
+        @locale = I18n.default
       else
         @template_options = options.dup
         @locale = @template_options[:locale] ||= I18n.default
